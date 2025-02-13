@@ -1,0 +1,66 @@
+/* Importing a cool font */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #1e1e1e, #292929);
+    font-family: 'Orbitron', sans-serif;
+    color: white;
+    text-align: center;
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 12px;
+    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.2);
+}
+
+#banner {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    color: #ffcc00;
+}
+
+#clock {
+    font-size: 50px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0px 0px 20px #ffcc00;
+    padding: 50px;
+    border: 3px solid #ffcc00;
+    border-radius: 10px;
+    width: 350px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* Smooth glow effect */
+@keyframes glow {
+    0% {
+        text-shadow: 0px 0px 20px #ffcc00;
+    }
+
+    50% {
+        text-shadow: 0px 0px 40px #ffcc00;
+    }
+
+    100% {
+        text-shadow: 0px 0px 20px #ffcc00;
+    }
+}
+
+#clock {
+    animation: glow 1.5s infinite alternate;
+}
