@@ -1,0 +1,185 @@
+/* Importing a Retro Arcade Font */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: radial-gradient(circle, #111, #000);
+    font-family: 'Press Start 2P', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif, cursive;
+    color: #fff;
+    text-align: center;
+}
+
+.wrapper {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #ffcc00;
+    border: 3px solid #ffcc00;
+    width: 90%;
+    max-width: 500px;
+}
+
+/* Neon Title */
+h1 {
+    font-size: 20px;
+    color: #ff004f;
+    text-shadow: 0 0 10px #ff004f, 0 0 20px #ff004f;
+}
+
+/* Styling Paragraphs */
+p {
+    font-size: 14px;
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc;
+}
+
+/* Input Field */
+.guessField {
+    font-size: 16px;
+    padding: 10px;
+    margin: 20px;
+    border: 2px solid #00ffcc;
+    border-radius: 5px;
+    text-align: center;
+    background: #222;
+    color: #fff;
+    box-shadow: 0px 0px 8px #00ffcc;
+    width: 80%;
+}
+
+/* Submit Button */
+.guessSubmit {
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #ff004f;
+    color: white;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 10px #ff004f;
+    transition: 0.3s ease-in-out;
+}
+
+/* Glowing Effect on Hover */
+.guessSubmit:hover {
+    box-shadow: 0 0 20px #ff004f;
+    background: #ff3366;
+}
+
+/* Result Display */
+.resultParas {
+    margin-top: 20px;
+    padding: 10px;
+    border: 2px dashed #ffcc00;
+    box-shadow: 0px 0px 15px #ffcc00;
+    border-radius: 5px;
+}
+.resultParas .guesses{
+   font-size: 10px;
+}
+#newGame {
+    display: inline-block;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff5722;
+    /* Bright orange */
+    padding: 10px 20px;
+    background-color: #000;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 0 10px rgba(255, 87, 34, 0.7);
+    animation: pulseGlow 1.5s infinite alternate, shake 3s infinite ease-in-out;
+}
+
+/* Pulsing glow effect */
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 87, 34, 0.7);
+    }
+
+    100% {
+        box-shadow: 0 0 20px rgba(255, 87, 34, 1);
+    }
+}
+
+/* Shake animation to give a "click me" feel */
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-3px);
+    }
+
+    50% {
+        transform: translateX(3px);
+    }
+
+    75% {
+        transform: translateX(-2px);
+    }
+}
+
+/* When hovered, make it even more clickable */
+#newGame:hover {
+    transform: scale(1.1);
+    background-color: #ff5722;
+    color: white;
+}
+
+/* Glowing Animation */
+@keyframes flashBorder {
+    0% {
+        border-color: #ffcc00;
+        box-shadow: 0px 0px 15px #ffcc00;
+    }
+
+    50% {
+        border-color: #ff004f;
+        box-shadow: 0px 0px 15px #ff004f;
+    }
+
+    100% {
+        border-color: #00ffcc;
+        box-shadow: 0px 0px 15px #00ffcc;
+    }
+}
+
+.wrapper {
+    animation: flashBorder 2s infinite alternate;
+}
+
+/* Confetti Animation */
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Confetti Particle Styles */
+.confetti {
+    position: fixed;
+    background-color: red;
+    /* Default color (overridden in JS) */
+    opacity: 0.9;
+    pointer-events: none;
+    /* So it doesn't interfere with clicks */
+    animation: fall linear infinite;
+}
