@@ -7,14 +7,22 @@
     <link rel="stylesheet" href="Memory_game.css">
 </head>
 <body>
+    <div class="header-container">
+
+        <div class="timer"></div>
+        <div class="bestTime"></div>
+
+    </div>
     <h1>Memory Game</h1>
+    <h2 id="msg"></h2>
+    <div class="game_board" id="game_board"></div>
     <div class="file_input_container">
         
         <input type="file" name="" id="image_upload" multiple accept="image/*">
     </div>
 
     <button id="start_game">Start Game</button>
-    <div class="game_board" id="game_board"></div>
+
 
     <script src="Memory_game.js"></script>
 </body>

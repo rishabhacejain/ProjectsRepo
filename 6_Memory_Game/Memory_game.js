@@ -2,108 +2,155 @@ const imageUpload = document.getElementById("image_upload");
 const startGameBtn = document.getElementById("start_game");
 const gameBoard = document.getElementById("game_board");
 
+const msg = document.getElementById("msg");
 
-let userImages =[];
+const timer = document.querySelector(".timer");
+const displayBestTime = document.querySelector(".bestTime");
+
+
+let userImages = [];
 let shuffledCards = [];
 let flippedCards = [];
 let matches = 0;
+let startTime;
+let timerID; 
+let bestTime = localStorage.getItem("bestTime");
+
+if (bestTime) {
+    displayBestTime.innerHTML = `Best Time: ${bestTime} seconds`;
+    displayBestTime.style.display = 'inline-block';
+}
 
 //image upload
 
 
-imageUpload.addEventListener("change",function(e){
 
-    userImages=[];
+imageUpload.addEventListener("change", function (e) {
+    
+    userImages = [];
     const files = e.target.files;
-
-    if(files.length < 6){
-        alert("Upload atleast 6 images");
+    
+    if (files.length < 2) {
+        alert("Upload atleast 2 images");
+        
         
         return;
-       
+        
     } else if (files.length > 16 || files.length % 2 !== 0) {
-
+        
         alert("Upload In even Number like 6,8,10,12,14 or Max 16 ");
         return;
-
-    } 
-
-
-
-    for(let file of files){
-
-        const  imgURL = URL.createObjectURL(file);
+        
+    }
+    
+    
+    
+    for (let file of files) {
+        
+        const imgURL = URL.createObjectURL(file);
         userImages.push(imgURL);
         console.log(imgURL);
         
     }
-
+    
 });
+
 
 //start game
 
-startGameBtn.addEventListener("click",()=>{
-
-    if (userImages.length < 5 ){
+startGameBtn.addEventListener("click", () => {
+    
+    
+    if (userImages.length < 2) {
         alert("Please Upload Atleast 5 Images");
         return;
     }
+    const clock = document.getElementById("clock");
+    
+    
+    
+    
+    msg.style.display = 'none'; // Hide previous messages
+    clearInterval(timerID); // Clear any existing timer
+    timer.innerHTML = "00:00"; // Reset Timer UI
+    
+    startTime = Date.now();
+    timerID = setInterval(updateTimer, 1000);
+    timer.style.display = 'block'
 
     setupGame();
-
+    
 });
 
-function setupGame(){
+function updateTimer() {
+    let elapsed = Math.floor((Date.now() - startTime) / 1000);
+    let minutes = String(Math.floor(elapsed / 60)).padStart(2, "0");
+    let seconds = String(elapsed % 60).padStart(2, "0");
+    timer.innerHTML = `${minutes}:${seconds}`;
+}
+
+function setupGame() {
+
     gameBoard.innerHTML = ""
     shuffledCards = shuffleCards([...userImages, ...userImages]);
     matches = 0;
     flippedCards = [];
 
-    shuffledCards.forEach((image , index)=> {
-        const card  = document.createElement("div");
+    const totalCards = shuffledCards.length;
+    
+     if((totalCards % 4 == 0) && (totalCards <= 12)){
+         
+         gameBoard.style.gridTemplateColumns = `repeat(4, 1fr)`;
+        }else if(totalCards % 5 ==0){
+         gameBoard.style.gridTemplateColumns = `repeat(5, 1fr)`;
+     } else {
+         gameBoard.style.gridTemplateColumns = `repeat(8, 1fr)`;
+     }
+    shuffledCards.forEach((image, index) => {
+        const card = document.createElement("div");
         card.classList.add("card");
         card.dataset.index = index;
-
-        const img  = document.createElement("img");
+        
+        const img = document.createElement("img");
         img.src = image;
         card.appendChild(img);
-
-        card.addEventListener("click",() => flipCard(card));
+        
+        card.addEventListener("click", () => flipCard(card));
         gameBoard.appendChild(card);
         
-
+        
     });
-
+    
 }
-    //shulffle card
+//shulffle card
 
-    function shuffleCards(cards){
+function shuffleCards(cards) {
+    
+    return cards.sort(() => Math.random() - 0.5)
+}
 
-     return cards.sort(()=> Math.random()-0.5)
+//flip card
+
+function flipCard(card) {
+    if (flippedCards.length < 2 && !card.classList.contains("is-flipped")) {
+        
+        card.classList.add("is-flipped");
+        card.querySelector("img").style.display = "block";
+        flippedCards.push(card)
     }
-
-    //flip card
-
-    function flipCard(card){
-        if(flippedCards.length < 2  && !card.classList.contains("is-flipped")){
-
-            card.classList.add("is-flipped");
-            card.querySelector("img").style.display = "block";
-            flippedCards.push(card)
-        }
-
-        if(flippedCards.length === 2){
-
-            setTimeout(checkMatch,800)
-        }
+    
+    if (flippedCards.length === 2) {
+        
+        setTimeout(checkMatch, 800)
     }
-function checkMatch(){
+}
+function checkMatch() {
     const [card1, card2] = flippedCards;
     const img1 = card1.querySelector("img").src;
     const img2 = card2.querySelector("img").src;
-
-    if(img1 === img2 ){
-
+    
+    if (img1 === img2) {
+        
         card1.classList.add("is-match");
         card2.classList.add("is-match");
         matches += 2;
@@ -114,11 +161,34 @@ function checkMatch(){
         card1.querySelector("img").style.display = "none";
         card2.querySelector("img").style.display = "none";
     }
-
+    
     flippedCards = [];
-
+    
     if (matches === shuffledCards.length) {
-        setTimeout(() => confetti(), 500);
+        clearInterval(timerID); // Clear any existing timer
+        const endTime = Date.now();
+        const totalTime = ((endTime - startTime) / 1000).toFixed(2);
+       
+        bestTime = bestTime ? parseFloat(bestTime) : Infinity; 
+        console.log(typeof(totalTime));
+        console.log(typeof(bestTime));
+        if(totalTime < bestTime){
+            
+            bestTime = totalTime;
+            localStorage.setItem("bestTime", bestTime);
+            displayBestTime.innerHTML = `Best Time: ${bestTime} seconds`
+        }
+        
+        
+        setTimeout(() => {
+            
+            confetti();
+            msg.innerHTML = `Game finished! You took 
+            ${totalTime} seconds!`;
+            msg.style.display = 'block';
+    
+        }, 500);
+
     }
 
 
@@ -126,7 +196,7 @@ function checkMatch(){
 
 
 function confetti() {
-    const duration = 3 * 1000; // 3 seconds
+    const duration = 10 * 1000; // 3 seconds
     const animationEnd = Date.now() + duration;
     const colors = ["#ff0", "#ff5722", "#ff00ff", "#00ffff", "#00ff00"];
 
