@@ -127,7 +127,7 @@ input[type="file"] {
     backdrop-filter: blur(10px);
     border-radius: 15px;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-    max-height: 600px';
+    max-height: 600px;
 }
 
 /* Card styles */
@@ -205,4 +205,52 @@ input[type="file"] {
     pointer-events: none;
     /* So it doesn't interfere with clicks */
     animation: fall linear infinite;
+}
+
+
+
+/* Responsive Design for Mobile */
+@media (max-width: 768px) {
+
+    /* Adjust game board grid */
+    .game_board {
+        grid-template-columns: repeat(3, 1fr);
+        /* 3 cards per row */
+        gap: 10px;
+        padding: 20px;
+    }
+
+    /* Smaller cards */
+    .card {
+        width: 70px;
+        /* Reduced width */
+        height: 90px;
+        /* Reduced height */
+    }
+
+    /* Adjust timer and best time positions */
+    .timer,
+    .bestTime {
+        font-size: 18px;
+        top: 10px;
+        left: 10px;
+        right: auto;
+        padding: 8px 12px;
+    }
+
+    .bestTime {
+        right: 10px;
+        left: auto;
+    }
+
+    /* Adjust headings */
+    h1 {
+        font-size: 24px;
+    }
+
+    /* Buttons */
+    button {
+        font-size: 1rem;
+        padding: 8px 16px;
+    }
 }
