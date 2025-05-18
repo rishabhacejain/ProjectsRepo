@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>राम माला</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            background-color: #fff8f0;
+            overflow: hidden;
+            background-image: url(ramBg.png);
+            background-repeat: no-repeat;
+            background-position: 300px;
+            background-blend-mode: overlay;
+        }
+
+        .top-border {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            background-color: #fff3f3;
+            color: red;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            padding: 5px 0;
+            border-bottom: 2px solid red;
+            box-shadow: 0 2px 4px rgba(255, 0, 0, 0.2);
+        }
+
+        .top-border span {
+            display: inline-block;
+            animation: scroll-left 12s linear infinite;
+        }
+
+        @keyframes scroll-left {
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+        .header {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #fff;
+            color: darkred;
+            font-weight: bold;
+            font-size: 20px;
+            border-bottom: 1px solid red;
+        }
+
+        #counter {
+            color: red;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(36, 1fr);
+            grid-template-rows: repeat(28, 1fr);
+            width: 100vw;
+            height: calc(100vh - 160px);
+        }
+
+        .cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8vw;
+            color: red;
+            border: 0.5px solid red;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .cell.filled {
+            font-weight: bold;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid red;
+        }
+
+        .pagination button {
+            padding: 5px 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .pagination .active {
+            background-color: darkred;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-border">
+        <span>|| राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम
+            || राम || || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम ||</span>
+    </div>
+
+    <div class="header">
+        🕉 राम नाम लेखन माला | कुल: <span id="counter">0</span> राम
+    </div>
+
+    <div id="gridContainer" class="grid"></div>
+
+    <div class="pagination" id="pagination"></div>
+    <div class="top-border">
+        <span>|| राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम
+            || राम || || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम || राम
+            ||</span>
+    </div>
+
+    <script>
+        const gridContainer = document.getElementById('gridContainer');
+        const counterElement = document.getElementById('counter');
+        const pagination = document.getElementById('pagination');
+
+        let totalCount = 0;
+        let pages = [[]]; // stores filled status
+        let currentPage = 0;
+        const TOTAL_CELLS = 1008;
+
+        function createGrid(pageIndex) {
+            gridContainer.innerHTML = "";
+            const pageData = pages[pageIndex];
+            for (let i = 0; i < TOTAL_CELLS; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                if (pageData[i]) {
+                    cell.textContent = 'राम';
+                    cell.classList.add('filled');
+                }
+
+                cell.addEventListener('click', () => {
+                    if (!pageData[i]) {
+                        pageData[i] = true;
+                        cell.textContent = 'राम';
+                        cell.classList.add('filled');
+                        totalCount++;
+                        updateCounter();
+                        checkPageFull();
+                    }
+                });
+
+                gridContainer.appendChild(cell);
+            }
+        }
+
+        function updateCounter() {
+            counterElement.textContent = totalCount;
+        }
+
+        function checkPageFull() {
+            if (pages[currentPage].filter(Boolean).length === TOTAL_CELLS) {
+                setTimeout(() => {
+                    if (confirm("1008 राम पूरे हो चुके हैं। क्या आप अगला पेज शुरू करना चाहते हैं?")) {
+                        pages.push([]);
+                        currentPage = pages.length - 1;
+                        renderPagination();
+                        createGrid(currentPage);
+                    }
+                }, 100);
+            }
+        }
+
+        function renderPagination() {
+            pagination.innerHTML = "";
+            pages.forEach((_, index) => {
+                const btn = document.createElement('button');
+                btn.textContent = `Page ${index + 1}`;
+                if (index === currentPage) btn.classList.add('active');
+                btn.addEventListener('click', () => {
+                    currentPage = index;
+                    createGrid(currentPage);
+                    renderPagination();
+                });
+                pagination.appendChild(btn);
+            });
+        }
+
+        // Handle spacebar
+        document.addEventListener('keydown', function (event) {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                const pageData = pages[currentPage];
+                for (let i = 0; i < TOTAL_CELLS; i++) {
+                    if (!pageData[i]) {
+                        pageData[i] = true;
+                        gridContainer.children[i].textContent = 'राम';
+                        gridContainer.children[i].classList.add('filled');
+                        totalCount++;
+                        updateCounter();
+                        checkPageFull();
+                        break;
+                    }
+                }
+            }
+        });
+
+        // Initial setup
+        createGrid(currentPage);
+        renderPagination();
+        updateCounter();
+    </script>
+
+</body>
+
+</html>
